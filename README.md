@@ -57,9 +57,10 @@ invoice-auditor/
 ├── .gitignore
 └── README.md
 
-```yaml 
-
+```
 ---
+
+```yaml 
 
 ## 🧠 Core Capabilities
 
@@ -84,7 +85,7 @@ invoice-auditor/
 ### 📜 Auditability
 - All queries and answers are logged
 - Invoice state is tracked (processed / reviewed / approved)
-
+```
 ---
 
 ## 🖥️ User Interface (Streamlit)
@@ -117,21 +118,22 @@ invoice-auditor/
 ```bash
 cd backend
 uvicorn app.main:app --reload
+```
 
 API available at:
 
 ```bash
 http://127.0.0.1:8000
-
+```
 Swagger docs:
 ```bash
 http://127.0.0.1:8000/docs
-
+```
 2️⃣ Start UI (Streamlit)
 ```bash
 cd ui
 streamlit run streamlit_app.py
-
+```
 
 🎯 Use Cases
 
