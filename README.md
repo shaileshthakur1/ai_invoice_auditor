@@ -1,275 +1,161 @@
-# Invoice Auditor 🧾  
-AI-powered invoice analysis with Human-in-the-Loop verification
+# 🧾 Invoice Auditor
 
-Invoice Auditor is an end-to-end application that allows users to upload invoices (PDF or images), extract structured information, and ask intelligent questions using Retrieval-Augmented Generation (RAG).
-
-The system is built with **audit safety**, **human review**, and **explainability** as first-class concerns — making it suitable for real-world financial document review, not just demos.
+An **AI-powered invoice auditing system** that extracts structured data from invoices, enables intelligent question answering using RAG, and supports **Human-in-the-Loop (HITL)** review for approval, rejection, and correction of invoice data.
 
 ---
 
-## ✨ Key Features
+## 📌 Project Overview
 
-- 📤 Upload **single or multiple invoices**
-- 🔍 Automatic extraction of key invoice fields (deterministic, non-LLM)
-- 🧠 Context-aware AI Q&A using RAG
-- 🧑‍⚖️ Human-in-the-Loop (HITL) workflow:
-  - Approve invoice
-  - Reject invoice
-  - Edit extracted fields
-- 🗂️ Persistent storage:
-  - Relational DB for audit data
-  - Vector DB per invoice for semantic search
-- 📜 Query history per invoice
-- 🔄 Multi-LLM fallback:
-  - Default: Cohere
-  - Optional: OpenAI, Gemini
-- 🎨 Clean, audit-grade Streamlit UI
-- 🔒 No cross-invoice data leakage
+**Invoice Auditor** is an end-to-end application designed for real-world invoice verification workflows.  
+It combines deterministic data extraction, vector-based retrieval, and human oversight to ensure accuracy and audit safety.
+
+The system is built with a **backend–frontend separation**, persistent storage, and invoice-level isolation.
 
 ---
 
-## 🧠 How It Works (High-Level Flow)
+## 🔄 Application Workflow
 
-# Invoice Auditor 🧾  
-AI-powered invoice analysis with Human-in-the-Loop verification
-
-Invoice Auditor is an end-to-end application that allows users to upload invoices (PDF or images), extract structured information, and ask intelligent questions using Retrieval-Augmented Generation (RAG).
-
-The system is built with **audit safety**, **human review**, and **explainability** as first-class concerns — making it suitable for real-world financial document review, not just demos.
-
----
-
-## ✨ Key Features
-
-- 📤 Upload **single or multiple invoices**
-- 🔍 Automatic extraction of key invoice fields (deterministic, non-LLM)
-- 🧠 Context-aware AI Q&A using RAG
-- 🧑‍⚖️ Human-in-the-Loop (HITL) workflow:
-  - Approve invoice
-  - Reject invoice
-  - Edit extracted fields
-- 🗂️ Persistent storage:
-  - Relational DB for audit data
-  - Vector DB per invoice for semantic search
-- 📜 Query history per invoice
-- 🔄 Multi-LLM fallback:
-  - Default: Cohere
-  - Optional: OpenAI, Gemini
-- 🎨 Clean, audit-grade Streamlit UI
-- 🔒 No cross-invoice data leakage
-
----
-
-## 🧠 How It Works (High-Level Flow)
-
-Invoice Upload
-↓
-Text Extraction (PDF parsing / OCR)
-↓
-Structured Field Extraction (Regex + heuristics)
-↓
-Vector Embedding (per invoice)
-↓
-Human Review (Approve / Reject / Edit)
-↓
-AI Question Answering
-├─ Structured DB (if possible)
-└─ RAG fallback (invoice-specific)
-
-
-### Smart Query Routing
-1. If a question maps to a known structured field → answer directly from DB  
-2. Otherwise → retrieve relevant chunks from that invoice’s vector store  
-3. All queries and answers are logged for auditability
+1. **Invoice Upload** – PDF or image invoices are uploaded  
+2. **Text Extraction** – PDF parsing / OCR (if required)  
+3. **Structured Extraction** – Key invoice fields extracted deterministically  
+4. **Vector Indexing** – Invoice text embedded and stored per invoice  
+5. **Human-in-the-Loop Review**
+   - Approve
+   - Reject
+   - Edit extracted fields
+6. **AI Question Answering**
+   - Structured DB lookup first
+   - RAG fallback when needed
+7. **Query Logging & Audit Trail**
 
 ---
 
 ## 🏗️ Project Structure
 
+```text 
 invoice-auditor/
 │
 ├── backend/
 │ ├── app/
 │ │ ├── api/ # FastAPI routes (upload, chat, review, invoice)
-│ │ ├── ingestion/ # File loading, OCR, parsing
-│ │ ├── rag/ # Embeddings, vector store, routing
+│ │ ├── ingestion/ # File loading, OCR, parsing, extraction
+│ │ ├── rag/ # Embeddings, vector store, routing logic
 │ │ ├── database.py # SQLAlchemy models & DB session
-│ │ ├── config.py # Environment & settings
+│ │ ├── config.py # Environment configuration
 │ │ └── main.py # FastAPI entry point
 │ │
-│ ├── .env.example
-│ └── invoice_auditor.db # Created automatically (ignored in git)
+│ └── .env.example
 │
 ├── ui/
-│ └── streamlit_app.py # Streamlit frontend
+│ └── streamlit_app.py # Streamlit-based UI
 │
 ├── data/
-│ ├── uploads/ # Uploaded invoices (gitignored)
-│ └── vector_db/ # FAISS vector stores (gitignored)
+│ ├── uploads/ # Uploaded invoices (runtime)
+│ └── vector_db/ # Per-invoice vector stores (runtime)
 │
 ├── requirements.txt
 ├── .gitignore
 └── README.md
 
+```yaml 
 
 ---
 
-## ⚙️ Prerequisites
+## 🧠 Core Capabilities
 
-- Python **3.9 or higher**
-- At least **one LLM API key**
-  - Cohere is recommended and works out of the box
+### 🔍 Structured Invoice Extraction
+- Invoice number
+- Invoice date
+- Vendor name
+- Total amount  
+(Deterministic, non-LLM based)
+
+### 🧠 AI Question Answering (RAG)
+- Invoice-specific retrieval
+- No cross-invoice context leakage
+- Answers always scoped to the selected invoice
+
+### 🧑‍⚖️ Human-in-the-Loop (HITL)
+- Approve invoice
+- Reject invoice
+- Edit extracted fields
+- Edited data is persisted and immediately reflected in AI answers
+
+### 📜 Auditability
+- All queries and answers are logged
+- Invoice state is tracked (processed / reviewed / approved)
 
 ---
 
-## 🔑 Environment Setup
+## 🖥️ User Interface (Streamlit)
 
-Create a `.env` file inside the `backend/` directory.
+- Upload single or multiple invoices
+- Select invoice context from sidebar
+- Expandable sections for:
+  - Extracted invoice information
+  - Review & actions
+- AI assistant for invoice-specific questions
+- Scrollable query history per invoice
 
-Example:
+---
 
-```env
-# === REQUIRED (RECOMMENDED) ===
-COHERE_API_KEY=your_cohere_api_key
+## ⚙️ LLM & Embedding Strategy
 
-# === OPTIONAL FALLBACKS ===
-OPENAI_API_KEY=
-GEMINI_API_KEY=
+- **Default provider:** Cohere (chat + embeddings)
+- **Optional fallbacks:** OpenAI, Gemini
+- Each invoice has:
+  - its own database records
+  - its own vector index
+- Ensures strict data isolation and audit safety
 
-# === STORAGE PATHS ===
-UPLOAD_PATH=../data/uploads
-VECTOR_DB_PATH=../data/vector_db
+---
 
+## ▶️ Running the Application
 
-📦 Installation
+### 1️⃣ Start Backend (FastAPI)
 
-Clone the repository:
-
-git clone https://github.com/shaileshthakur1/ai-invoice-auditor.git
-cd invoice-auditor
-
-📦 Installation
-
-Clone the repository:
-
-git clone https://github.com/your-username/invoice-auditor.git
-cd invoice-auditor
-
-
-Install dependencies:
-
-pip install -r requirements.txt
-
-▶️ Running the Application
-1️⃣ Start the Backend (FastAPI)
+```bash
 cd backend
 uvicorn app.main:app --reload
 
+API available at:
 
-Backend runs at:
-
+```bash
 http://127.0.0.1:8000
 
-
-Interactive API docs (Swagger):
-
+Swagger docs:
+```bash
 http://127.0.0.1:8000/docs
 
-2️⃣ Start the Frontend (Streamlit)
-
-Open a new terminal:
-
+2️⃣ Start UI (Streamlit)
+```bash
 cd ui
 streamlit run streamlit_app.py
 
 
-The UI will open automatically in your browser.
+🎯 Use Cases
 
-🧪 How to Use the App
+Invoice verification & auditing
 
-Upload one or more invoices from the sidebar
+Finance and accounting workflows
 
-Select an invoice from the invoice selector
+Compliance-oriented document review
 
-Expand Extracted Invoice Information to review parsed fields
+AI-assisted invoice analysis
 
-Open Review & Actions:
+📌 Future Enhancements
 
-Approve the invoice
+Rule-based auto-flagging
 
-Reject the invoice
+Role-based access control
 
-Edit any extracted field
+Confidence scoring for extracted fields
 
-Ask questions in the AI Assistant section
+Reporting & analytics dashboard
 
-View previous questions in Query History (sidebar)
+Containerized deployment
 
-🧑‍⚖️ Human-in-the-Loop (HITL)
+🏁 Summary
 
-Invoices start in a PROCESSED state
-
-A human can:
-
-Approve (trustworthy)
-
-Reject (invalid)
-
-Edit extracted fields
-
-Edited values are persisted in the database
-
-AI answers always reflect the latest approved data
-
-Flagged invoices warn users before answering
-
-🧠 LLM & Embeddings Strategy
-
-Default provider: Cohere (chat + embeddings)
-
-Fallback providers: OpenAI, Gemini
-
-Each invoice:
-
-has its own FAISS vector store
-
-is queried independently
-
-This prevents cross-invoice context leakage
-
-🚀 Why This Project Is Different
-
-Deterministic extraction before LLM usage
-
-Explicit human approval workflow
-
-Audit-safe, explainable architecture
-
-Clear separation of ingestion, storage, reasoning, and review
-
-Designed as a verification workspace, not just a chatbot
-
-📌 Possible Future Improvements
-
-Role-based access (viewer vs reviewer)
-
-Rule-based auto-flagging (business validations)
-
-Exportable audit reports
-
-Background processing / queues
-
-Docker & cloud deployment
-
-🧹 Git Hygiene
-
-Runtime data is ignored (data/, databases, vector stores)
-
-Secrets are never committed
-
-Only reproducible code is versioned
-
-📝 License
-
-MIT License
-
+This project demonstrates a production-oriented invoice auditing pipeline that balances automation with human oversight.
+It is designed to be accurate, auditable, and extensible, making it suitable for real-world financial document workflows.

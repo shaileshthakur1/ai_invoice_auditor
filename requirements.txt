@@ -1,16 +1,30 @@
+# Core
 fastapi
 uvicorn
+pydantic
 python-dotenv
 
-langchain
-langchain-community
-langchain-openai
-langchain-google-genai
-langchain-cohere
+# Database
+sqlalchemy
 
-faiss-cpu
+# File handling
 pypdf
 pillow
 pytesseract
 
+# Vector DB & RAG
+faiss-cpu
+langchain
+langchain-community
+
+# LLM Providers
+langchain-cohere
+langchain-openai
+langchain-google-genai
+
+# Frontend
 streamlit
+requests
+
+# Utils
+tqdm
