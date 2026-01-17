@@ -7,7 +7,7 @@ from app.api.invoice import router as invoice_router
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Invoice Auditor")
+app = FastAPI(title="AI Invoice Auditor")
 
 app.include_router(invoice_router, prefix="/invoice")
 app.include_router(review_router, prefix="/review")

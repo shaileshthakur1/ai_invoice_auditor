@@ -1,4 +1,4 @@
-# 🧾 Invoice Auditor
+# 🧾AI Invoice Auditor
 
 An **AI-powered invoice auditing system** that extracts structured data from invoices, enables intelligent question answering using RAG, and supports **Human-in-the-Loop (HITL)** review for approval, rejection, and correction of invoice data.
 

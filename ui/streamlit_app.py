@@ -7,7 +7,7 @@ BACKEND_URL = "http://127.0.0.1:8000"
 # Page Config
 # ======================================================
 st.set_page_config(
-    page_title="Invoice Auditor",
+    page_title="Ai Invoice Auditor",
     page_icon="🧾",
     layout="wide"
 )
@@ -94,7 +94,7 @@ def api_post(path, json=None, files=None):
 # Sidebar — Upload, Select, History
 # ======================================================
 with st.sidebar:
-    st.markdown("## Invoice Auditor")
+    st.markdown("## Ai Invoice Auditor")
     st.caption("Audit workspace")
 
     st.divider()
