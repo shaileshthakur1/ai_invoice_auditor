@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+python-dotenv
+
+langchain
+langchain-community
+langchain-openai
+langchain-google-genai
+langchain-cohere
+
+faiss-cpu
+pypdf
+pillow
+pytesseract
+
+streamlit
