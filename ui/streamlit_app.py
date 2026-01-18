@@ -7,23 +7,24 @@ BACKEND_URL = "http://127.0.0.1:8000"
 # Page Config
 # ======================================================
 st.set_page_config(
-    page_title="Ai Invoice Auditor",
+    page_title="AI Invoice Auditor",
     page_icon="🧾",
     layout="wide"
 )
 
 # ======================================================
-# Theme-Safe, High-Contrast Styles
+# Theme-Safe, Audit-Grade Styles
 # ======================================================
 st.markdown("""
 <style>
 html, body {
-    background-color: #f8fafc;
+    background-color: #020617;
 }
 
 /* Sidebar */
 section[data-testid="stSidebar"] {
-    background-color: #0f172a;
+    background-color: #020617;
+    border-right: 1px solid #1e293b;
 }
 section[data-testid="stSidebar"] * {
     color: #e5e7eb !important;
@@ -31,10 +32,10 @@ section[data-testid="stSidebar"] * {
 
 /* Section title */
 .section-title {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
-    color: #ffffff;
-    margin-bottom: 6px;
+    color: #f8fafc;
+    margin-bottom: 8px;
 }
 
 /* Report rows */
@@ -42,33 +43,56 @@ section[data-testid="stSidebar"] * {
     display: flex;
     justify-content: space-between;
     font-size: 14px;
-    padding: 3px 0;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 6px 0;
+    border-bottom: 1px solid #1e293b;
 }
-.report-key { color: #334155; }
-.report-value { color: #1e3a8a; font-weight: 500; }
+.report-key {
+    color: #94a3b8;
+}
+.report-value {
+    color: #e5e7eb;
+    font-weight: 500;
+}
 
-/* Chat bubbles */
+/* Chat - User */
 .chat-user {
-    background: #e2e8f0;
-    color: #020617;
-    padding: 10px 14px;
-    border-radius: 12px;
+    background: #1e293b;
+    color: #f8fafc;
+    padding: 12px 16px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+/* Chat - AI */
+.chat-ai {
+    background: #020617;
+    color: #e5e7eb;
+    padding: 16px 18px;
+    border-radius: 14px;
+    margin-bottom: 18px;
+    border: 1px solid #1e293b;
+    line-height: 1.6;
+}
+
+/* Markdown inside AI */
+.chat-ai ul {
+    padding-left: 18px;
+}
+.chat-ai li {
     margin-bottom: 6px;
 }
 
-.chat-ai {
-    background: #f1f5f9;
-    color: #020617;
-    padding: 10px 14px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    border-left: 4px solid #6366f1;
+/* Source */
+.chat-source {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #94a3b8;
 }
 
 /* Scroll */
 .scroll {
-    max-height: 260px;
+    max-height: 320px;
     overflow-y: auto;
 }
 </style>
@@ -94,12 +118,12 @@ def api_post(path, json=None, files=None):
 # Sidebar — Upload, Select, History
 # ======================================================
 with st.sidebar:
-    st.markdown("## Ai Invoice Auditor")
-    st.caption("Audit workspace")
+    st.markdown("## 🧾 AI Invoice Auditor")
+    st.caption("Invoice audit workspace")
 
     st.divider()
     st.markdown("### Upload Invoices")
-    st.caption("PDF / Image • Up to 200 MB")
+    st.caption("PDF / Image • Max 200 MB")
 
     uploaded_files = st.file_uploader(
         "Select files",
@@ -118,7 +142,7 @@ with st.sidebar:
     inv_res = api_get("/invoice/list")
     if inv_res.status_code == 200 and inv_res.json():
         selected = st.selectbox(
-            "Invoice",
+            "Invoice ID",
             options=[i["id"] for i in inv_res.json()]
         )
         st.session_state.invoice_id = selected
@@ -126,6 +150,7 @@ with st.sidebar:
     if st.session_state.invoice_id:
         st.divider()
         st.markdown("### Query History")
+
         history = api_get(f"/chat/history/{st.session_state.invoice_id}")
         if history.status_code == 200:
             st.markdown("<div class='scroll'>", unsafe_allow_html=True)
@@ -141,7 +166,7 @@ if st.session_state.invoice_id:
     # -------- TOP ROW --------
     left, right = st.columns([2, 1.3])
 
-    # -------- Extracted Info --------
+    # -------- Extracted Invoice Info --------
     with left:
         with st.expander("Extracted Invoice Information", expanded=False):
             fields = api_get(f"/chat/fields/{st.session_state.invoice_id}")
@@ -157,19 +182,19 @@ if st.session_state.invoice_id:
                         unsafe_allow_html=True
                     )
             else:
-                st.info("No extracted data")
+                st.info("No extracted invoice data available")
 
     # -------- Review & Actions --------
     with right:
         with st.expander("Review & Actions", expanded=False):
-            col1, col2, col3 = st.columns(3)
+            c1, c2, c3 = st.columns(3)
 
-            with col1:
+            with c1:
                 if st.button("Approve", use_container_width=True):
                     api_post(f"/review/{st.session_state.invoice_id}/approve")
                     st.success("Invoice approved")
 
-            with col2:
+            with c2:
                 if st.button("Reject", use_container_width=True):
                     api_post(
                         f"/review/{st.session_state.invoice_id}/flag",
@@ -177,11 +202,10 @@ if st.session_state.invoice_id:
                     )
                     st.error("Invoice rejected")
 
-            with col3:
+            with c3:
                 if st.button("Edit", use_container_width=True):
                     st.session_state.show_edit = not st.session_state.show_edit
 
-            # ---- Conditional Edit ----
             if st.session_state.show_edit:
                 st.divider()
                 fname = st.text_input("Field name", placeholder="total_amount")
@@ -201,15 +225,29 @@ if st.session_state.invoice_id:
     st.markdown("<div class='section-title'>AI Assistant</div>", unsafe_allow_html=True)
 
     st.markdown("<div class='scroll'>", unsafe_allow_html=True)
-    for m in st.session_state.chat_log:
-        st.markdown(f"<div class='chat-user'><b>You:</b> {m['q']}</div>", unsafe_allow_html=True)
-        st.markdown(
-            f"<div class='chat-ai'><b>System:</b> {m['a']}<br><small>Source: {m['source']}</small></div>",
+
+    with st.container():
+        for m in st.session_state.chat_log:
+            st.markdown(
+                f"<div class='chat-user'><b>You</b><br>{m['q']}</div>",
+                unsafe_allow_html=True
+            )
+
+            st.markdown("<div class='chat-ai'>", unsafe_allow_html=True)
+            st.markdown(m["a"])
+            st.markdown(
+                f"<div class='chat-source'>Source: {m['source']}</div>",
             unsafe_allow_html=True
         )
+        st.markdown("</div>", unsafe_allow_html=True)
+
+
     st.markdown("</div>", unsafe_allow_html=True)
 
-    question = st.text_input("Ask a question about this invoice")
+    question = st.text_input(
+        "Ask a question about this invoice",
+        placeholder="e.g. Summarize the invoice or list key details"
+    )
 
     if st.button("Submit Question") and question:
         res = api_post(
