@@ -1,0 +1,50 @@
+# =========================
+# Backend
+# =========================
+fastapi>=0.110
+uvicorn>=0.27
+python-dotenv>=1.0
+
+# =========================
+# Database
+# =========================
+sqlalchemy>=2.0
+
+# =========================
+# File & OCR
+# =========================
+pypdf>=4.0
+pillow>=10.0
+pytesseract>=0.3.10
+
+# =========================
+# Vector Store
+# =========================
+faiss-cpu>=1.8.0
+
+# =========================
+# LangChain (minimal & stable)
+# =========================
+langchain>=0.2.6
+langchain-community>=0.2.6
+langchain-core>=0.2.6
+
+#python-multipart>=0.0.6
+python-multipart>=0.0.6
+
+# =========================
+# Cohere (ONLY LLM PROVIDER)
+# =========================
+cohere>=5.0
+langchain-cohere>=0.1.9
+
+# =========================
+# Frontend
+# =========================
+streamlit>=1.30
+requests>=2.31
+
+# =========================
+# Utilities
+# =========================
+tqdm>=4.66
