@@ -1,6 +1,3 @@
----
-
-````md
 # 🧾 AI Invoice Auditor
 
 An **AI-powered invoice auditing system** that extracts structured data from invoices, enables intelligent question answering using **Retrieval-Augmented Generation (RAG)**, and supports **Human-in-the-Loop (HITL)** review for approval, rejection, and correction of invoice data.
@@ -229,5 +226,4 @@ This project demonstrates a **production-oriented invoice auditing pipeline** th
 It is designed to be **accurate, auditable, and extensible**, making it suitable for real-world financial document workflows.
 
 ```
-
 ---
