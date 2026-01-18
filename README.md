@@ -1,15 +1,3 @@
-Perfect 👍
-Below is the **FULL, CLEAN, COPY-PASTABLE `README.md`**, updated to reflect that:
-
-* ✅ `requirements.txt` lives **inside `backend/`**
-* ✅ setup steps are **first**
-* ✅ Cohere-only (no OpenAI/Gemini noise)
-* ✅ short, clear, reviewer-safe
-* ✅ matches your **actual folder structure**
-* ✅ no missing critical steps
-
-You can paste this **as-is** into `README.md`.
-
 ---
 
 ````md
@@ -28,7 +16,7 @@ cd backend
 python -m venv venv
 venv\Scripts\activate        # Windows
 # source venv/bin/activate   # macOS / Linux
-````
+```
 
 ---
 
