@@ -15,6 +15,6 @@ data/vector_db/
 data/uploads/...
 data/vector_db/...
 
-backend/app/.env
+backend/.env
 
-*.log
+*.logs
